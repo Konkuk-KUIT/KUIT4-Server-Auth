@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+import static com.kuit.kuit4serverauth.service.SecretKeyGenerator.*;
+
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
+    private final String secret = generateKey();
     private final long expirationMs = 3600000; // 1 hour
 
     public String generateToken(String username, String role) {
