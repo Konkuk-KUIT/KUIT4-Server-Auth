@@ -5,14 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
 
     @GetMapping("/profile")
-    public ResponseEntity<String> getProfile(HttpServletRequest request) {
-        String username = (String) request.getAttribute("username");
+    public ResponseEntity<String> getProfile(@RequestAttribute("username") String username) {
 
         if (username != null) {
             return ResponseEntity.ok("Hello, " + username);
@@ -22,8 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/admin")
-    public ResponseEntity<String> getAdmin(HttpServletRequest request) {
-        String role = (String) request.getAttribute("role");
+    public ResponseEntity<String> getAdmin(@RequestAttribute("role") String role) {
         if (role != null && role.equals("ROLE_ADMIN")) {
             return ResponseEntity.ok("Hello, admin");
         }
