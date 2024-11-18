@@ -12,7 +12,6 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
-        // TODO : 로그인 한 사용자면 username 이용해 "Hello, {username}" 반환하기
         String username = (String) request.getAttribute("username");
 
         if (username != null) {
@@ -24,7 +23,6 @@ public class UserController {
 
     @GetMapping("/admin")
     public ResponseEntity<String> getAdmin(HttpServletRequest request) {
-        // TODO: role이 admin이면 "Hello, admin" 반환하기
         String role = (String) request.getAttribute("role");
         if (role != null && role.equals("ROLE_ADMIN")) {
             return ResponseEntity.ok("Hello, admin");

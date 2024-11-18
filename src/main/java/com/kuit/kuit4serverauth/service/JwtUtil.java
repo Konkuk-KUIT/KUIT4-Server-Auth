@@ -18,12 +18,24 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expirationMs; // 1 hour
 
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpirationMs;
+
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
