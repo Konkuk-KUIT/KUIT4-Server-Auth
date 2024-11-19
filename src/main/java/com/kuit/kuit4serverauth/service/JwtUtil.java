@@ -3,6 +3,7 @@ package com.kuit.kuit4serverauth.service;
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
+    private final String secret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
     private final long expirationMs = 3600000; // 1 hour
+    private final long refreshTokenExpirationMs = 7 * 24 * 3600000; // 7 days
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -34,4 +36,30 @@ public class JwtUtil {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
+
+    public String generateRefreshToken(String username, String role) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String validateRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(refreshToken);
+
+            return generateToken(
+                    claims.getBody().get("sub").toString(),
+                    claims.getBody().get("role").toString()
+            );
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode. INVALID_REFRESH_TOKEN);
+        }
+    }
+
 }
