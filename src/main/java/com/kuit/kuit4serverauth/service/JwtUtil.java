@@ -3,16 +3,29 @@ package com.kuit.kuit4serverauth.service;
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
-    private final long expirationMs = 3600000; // 1 hour
+
+    @Value("${jwt.access-secret}")
+    private String accessSecret;
+
+    @Value("${jwt.refresh-secret}")
+    private String refreshSecret;
+
+
+    @Value("${jwt.expiration}")
+    private long expirationMs;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenExpirationMs;
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -20,18 +33,44 @@ public class JwtUtil {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, accessSecret)
                 .compact();
     }
 
     public Claims validateToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(accessSecret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
+
+    public String generateRefreshToken(String username, String role) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, refreshSecret)
+                .compact();
+    }
+
+    public String validateRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(refreshSecret)
+                    .parseClaimsJws(refreshToken);
+
+            return generateToken(
+                    claims.getBody().get("sub").toString(),
+                    claims.getBody().get("role").toString()
+            );
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode. INVALID_REFRESH_TOKEN);
+        }
+    }
+
 }
