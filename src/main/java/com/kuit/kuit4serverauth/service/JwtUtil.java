@@ -6,15 +6,22 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-    private final long expirationMs = 3600000; // 1 hour
-    private final long refreshTokenExpirationMs = 7 * 24 * 3600000; // 7 days
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private long expirationMs;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshTokenExpirationMs;
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
