@@ -14,8 +14,12 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    @Value("${jwt.access-secret}")
+    private String accessSecret;
+
+    @Value("${jwt.refresh-secret}")
+    private String refreshSecret;
+
 
     @Value("${jwt.expiration}")
     private long expirationMs;
@@ -29,14 +33,14 @@ public class JwtUtil {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, accessSecret)
                 .compact();
     }
 
     public Claims validateToken(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(accessSecret)
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
@@ -50,14 +54,14 @@ public class JwtUtil {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationMs))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, refreshSecret)
                 .compact();
     }
 
     public String validateRefreshToken(String refreshToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(secret)
+                    .setSigningKey(refreshSecret)
                     .parseClaimsJws(refreshToken);
 
             return generateToken(
