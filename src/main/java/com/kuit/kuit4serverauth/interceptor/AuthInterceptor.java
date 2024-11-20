@@ -6,10 +6,12 @@ import com.kuit.kuit4serverauth.service.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
 
@@ -22,9 +24,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            Claims claims = jwtUtil.validateToken(token);
+            Claims claims = jwtUtil.validateAccessToken(token);
             request.setAttribute("username", claims.getSubject());
             request.setAttribute("role", claims.get("role"));
+            log.info("사용자 {} 인증", request.getAttribute("username"));
             return true;
         }
         throw new CustomException(ErrorCode.MISSING_AUTH_HEADER);
