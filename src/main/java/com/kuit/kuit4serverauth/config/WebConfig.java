@@ -13,8 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
         this.authInterceptor = authInterceptor;
     }
 
+    //토큰 검증 로직을 컨트롤러 내에서 하는게 아니라 Interceptor의 preHandle로 선행처리
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // TODO /profile, /admin 앞에 붙이기
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/profile", "/admin");
     }
 }
