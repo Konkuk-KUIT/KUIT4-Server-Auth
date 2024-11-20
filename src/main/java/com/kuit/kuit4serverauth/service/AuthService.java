@@ -6,8 +6,7 @@ import com.kuit.kuit4serverauth.model.User;
 import com.kuit.kuit4serverauth.model.dao.RefreshToken;
 import com.kuit.kuit4serverauth.model.dto.request.LoginRequest;
 import com.kuit.kuit4serverauth.model.dto.request.RefreshRequest;
-import com.kuit.kuit4serverauth.model.dto.response.LoginResponse;
-import com.kuit.kuit4serverauth.model.dto.response.RefreshResponse;
+import com.kuit.kuit4serverauth.model.dto.response.TokenResponse;
 import com.kuit.kuit4serverauth.repository.RefreshTokenRepository;
 import com.kuit.kuit4serverauth.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -26,7 +25,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -42,10 +41,10 @@ public class AuthService {
         refreshTokenRepository.save(token);
         log.info(refreshToken);
 
-        return LoginResponse.of(accessToken, refreshToken);
+        return TokenResponse.of(accessToken, refreshToken);
     }
 
-    public RefreshResponse refresh(RefreshRequest refreshRequest) {
+    public TokenResponse refresh(RefreshRequest refreshRequest) {
         String refreshToken = refreshRequest.getRefreshToken();
 
         Claims claims = jwtUtil.validateRefreshToken(refreshToken);
@@ -61,6 +60,11 @@ public class AuthService {
         User findUser = userRepository.findByUsername(username);
         String accessToken = jwtUtil.generateAccessToken(username, findUser.getRole());
 
-        return RefreshResponse.of(accessToken);
+        //Refresh Token Rotation 구현
+        String newRefreshToken = jwtUtil.generateRefreshToken(findUser.getUsername());
+        RefreshToken rt= new RefreshToken(findUser.getUsername(), newRefreshToken, new Date(System.currentTimeMillis() + jwtUtil.getExpirationMs()*24));
+        refreshTokenRepository.update(rt);
+
+        return TokenResponse.of(accessToken, newRefreshToken);
     }
 }

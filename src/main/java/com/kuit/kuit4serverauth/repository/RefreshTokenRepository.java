@@ -28,4 +28,9 @@ public class RefreshTokenRepository {
         log.info("저장"+refreshToken.getRefreshToken());
         jdbcTemplate.update(sql, refreshToken.getUsername(), refreshToken.getRefreshToken(), refreshToken.getExpiresAt());
     }
+
+    public void update(RefreshToken refreshToken) {
+        String sql = "UPDATE refresh_tokens SET refresh_token = ?, expires_at = ? WHERE username = ?";
+        jdbcTemplate.update(sql, refreshToken.getRefreshToken(), refreshToken.getExpiresAt(), refreshToken.getUsername());
+    }
 }

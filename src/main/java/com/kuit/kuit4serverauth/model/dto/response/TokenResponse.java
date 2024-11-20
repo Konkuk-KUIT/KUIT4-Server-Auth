@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LoginResponse {
+public class TokenResponse {
 
     private final String accessToken;
     private final String refreshToken;
 
-    public static LoginResponse of(String accessToken, String refreshToken) {
-        return new LoginResponse(accessToken, refreshToken);
+    public static TokenResponse of(String accessToken, String refreshToken) {
+        return new TokenResponse(accessToken, refreshToken);
     }
 }
