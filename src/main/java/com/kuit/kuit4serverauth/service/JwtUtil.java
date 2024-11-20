@@ -5,14 +5,21 @@ import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
-    private final long expirationMs = 3600000; // 1 hour
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private long expirationMs; // 1 hour
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpirationMs;
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -24,10 +31,19 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirationMs))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
     public Claims validateToken(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(secret)
+            return Jwts.parser() // jwt 타입인지
+                    .setSigningKey(secret) // 내가 발급한 게 맞는지
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
