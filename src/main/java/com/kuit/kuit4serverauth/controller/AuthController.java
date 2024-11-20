@@ -38,7 +38,7 @@ public class AuthController {
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
-        response.put("trefreshToken", refreshToken);
+        response.put("refreshToken", refreshToken);
         return ResponseEntity.ok(response);
     }
 }

@@ -11,7 +11,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = System.getenv("JWT_SECRET");
+//    private final String secret = System.getenv("JWT_SECRET");
+    private final String secret = "lqkendlkqnkwneklnqwkenlkneklnelkwqnelkwqnekl";
+
     private final long expirationMs = 3600000; // 1 hour
     private final long refreshExpirationMs = 28_800_000; // 8 hours
 
