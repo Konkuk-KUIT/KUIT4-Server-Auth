@@ -1,7 +1,5 @@
 package com.kuit.kuit4serverauth.controller;
 
-import com.kuit.kuit4serverauth.service.JwtUtil;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
