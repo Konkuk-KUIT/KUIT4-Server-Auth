@@ -42,8 +42,8 @@ public class JwtUtil {
 
     public Claims validateToken(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(secret)
+            return Jwts.parser() // jwt 타입인지
+                    .setSigningKey(secret) // 내가 발급한 게 맞는지
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.kuit.kuit4serverauth.argumentResolver;
 
+import com.kuit.kuit4serverauth.dto.UserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -9,17 +10,18 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class RoleArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserInfoArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(String.class) &&
-                parameter.getParameterName().equals("role");
+        return parameter.getParameterType().equals(UserInfo.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        return request.getAttribute("role");
+        String username = (String)request.getAttribute("username");
+        String role = (String)request.getAttribute("role");
+        return new UserInfo(username, role);
     }
 }

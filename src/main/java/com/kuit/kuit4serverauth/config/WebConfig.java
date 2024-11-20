@@ -1,7 +1,6 @@
 package com.kuit.kuit4serverauth.config;
 
-import com.kuit.kuit4serverauth.argumentResolver.RoleArgumentResolver;
-import com.kuit.kuit4serverauth.argumentResolver.UsernameArgumentResolver;
+import com.kuit.kuit4serverauth.argumentResolver.UserInfoArgumentResolver;
 import com.kuit.kuit4serverauth.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,15 +12,12 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
-    private final UsernameArgumentResolver usernameArgumentResolver;
-    private final RoleArgumentResolver roleArgumentResolver;
+    private final UserInfoArgumentResolver userInfoArgumentResolver;
 
     public WebConfig(AuthInterceptor authInterceptor,
-                     UsernameArgumentResolver usernameArgumentResolver,
-                     RoleArgumentResolver roleArgumentResolver) {
+                     UserInfoArgumentResolver userInfoArgumentResolver) {
         this.authInterceptor = authInterceptor;
-        this.usernameArgumentResolver = usernameArgumentResolver;
-        this.roleArgumentResolver = roleArgumentResolver;
+        this.userInfoArgumentResolver = userInfoArgumentResolver;
     }
 
     @Override
@@ -33,7 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(usernameArgumentResolver);
-        argumentResolvers.add(roleArgumentResolver);
+        argumentResolvers.add(userInfoArgumentResolver);
     }
 }
