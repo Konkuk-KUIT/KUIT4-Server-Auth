@@ -16,5 +16,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // TODO /profile, /admin 앞에 붙이기
+        registry.addInterceptor(authInterceptor).addPathPatterns("/profile","/admin");
+        //인터셉터 적용될 경로 지정 -> 두 경로에 대해 인증 절차 거치도록
+
     }
 }
