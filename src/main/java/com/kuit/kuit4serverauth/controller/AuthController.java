@@ -30,6 +30,10 @@ public class AuthController {
         String password = credentials.get("password");
 
         User user = userRepository.findByUsername(username);
+//        System.out.println(username);
+//        System.out.println(password);
+//        System.out.println(user.getUsername());
+//        System.out.println(user.getPassword());
         if (user == null || !user.getPassword().equals(password)) {
             throw new CustomException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
