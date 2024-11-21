@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Date;
+
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
@@ -23,6 +25,15 @@ public class AuthInterceptor implements HandlerInterceptor {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             Claims claims = jwtUtil.validateToken(token);
+
+            if (claims.getExpiration().before(new Date())) {
+                throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+            }
+
+            if(!claims.get("type", String.class).equals("access")){
+                throw new CustomException(ErrorCode.ACCESS_TOKEN_REQUIRED);
+            }
+
             request.setAttribute("username", claims.getSubject());
             request.setAttribute("role", claims.get("role"));
             return true;
