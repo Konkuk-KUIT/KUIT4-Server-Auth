@@ -20,15 +20,13 @@ public class JwtUtil {
 
     public String generateToken(String username, String role) {
         // username과 role 정보를 받아서 Token 생성
-        System.out.println(secret);
-        String token =  Jwts.builder()
+        return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs)) // 유효기간 설정
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
-        return token;
     }
 
     public Claims validateToken(String token) {
