@@ -19,10 +19,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // Controller로 요청이 넘어가기 전에 가로채서 선처리 수행
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             Claims claims = jwtUtil.validateToken(token);
+            // username과 role를 request에 담아서 Controller에게 보냄
             request.setAttribute("username", claims.getSubject());
             request.setAttribute("role", claims.get("role"));
             return true;
