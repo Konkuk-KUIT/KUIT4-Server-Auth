@@ -13,29 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
 
-    public UserController(UserRepository userRepository, JwtUtil jwtUtil) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
         // TODO : 로그인 한 사용자면 username 이용해 "Hello, {username}" 반환하기
-        String token = extractToken(request);
+        String username = (String) request.getAttribute("username");
 
-        if (token != null) {
-            try {
-                Claims claims = jwtUtil.validateToken(token);
-                String userName = claims.getSubject();
-
-                User user = userRepository.findByUsername(userName);
-                if (user != null) {
-                    return ResponseEntity.ok("Hello, " + user.getUsername());
-                }
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        if (username != null) {
+            User user = userRepository.findByUsername(username);
+            if (user != null) {
+                return ResponseEntity.ok("Hello, " + user.getUsername());
             }
         }
 
@@ -45,34 +36,12 @@ public class UserController {
     @GetMapping("/admin")
     public ResponseEntity<String> getAdmin(HttpServletRequest request) {
         // TODO: role이 admin이면 "Hello, admin" 반환하기
-        String token = extractToken(request);
+        String role = (String) request.getAttribute("role");
 
-        if (token != null) {
-            try {
-                Claims claims = jwtUtil.validateToken(token);
-                String userName = claims.getSubject();
-
-                User user = userRepository.findByUsername(userName);
-                if (user == null || !"ROLE_ADMIN".equals(user.getRole())) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
-                }
-
-                return ResponseEntity.ok("Hello, admin");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
-            }
+        if ("ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.ok("Hello, admin");
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
-    }
-
-
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // "Bearer " 제거
-        }
-
-        return null;
     }
 }
