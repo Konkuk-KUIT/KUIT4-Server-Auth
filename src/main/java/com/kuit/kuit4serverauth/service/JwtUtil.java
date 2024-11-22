@@ -46,6 +46,7 @@ public class JwtUtil {
         }
     }
     public Claims validateRefreshToken(String token) {
+        //유저가 맞는지 아닌지 검증 하는 것 필요
         try {
             return Jwts.parser()
                     .setSigningKey(secret)
