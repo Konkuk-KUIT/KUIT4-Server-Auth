@@ -15,4 +15,5 @@ spring:
 jwt:
   secret: mysecretkey
   expiration: 3600000
+  refreshExpiration: 1,209,600,000
 
