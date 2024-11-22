@@ -7,11 +7,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
+    private final String secret = "wenoqwineofnioweniowfnoqwfenoifnewiofqnoinqo";
     private final long expirationMs = 3600000; // 1 hour
 
     public String generateToken(String username, String role) {
