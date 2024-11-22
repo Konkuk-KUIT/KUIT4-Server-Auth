@@ -14,7 +14,6 @@ import static org.springframework.http.HttpStatus.*;
 public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
-        // TODO : 로그인 한 사용자면 username 이용해 "Hello, {username}" 반환하기
         Object username = request.getAttribute("username");
         if (username != null) {
             return ResponseEntity.ok().body("Hello, " + username);
@@ -24,9 +23,7 @@ public class UserController {
 
     @GetMapping("/admin")
     public ResponseEntity<String> getAdmin(HttpServletRequest request) {
-        // TODO: role이 admin이면 "Hello, admin" 반환하기
         Object role = request.getAttribute("role");
-        System.out.println(role);
         if(role.equals("ROLE_ADMIN")) {
             return ResponseEntity.ok().body("Hello, admin");
         }
