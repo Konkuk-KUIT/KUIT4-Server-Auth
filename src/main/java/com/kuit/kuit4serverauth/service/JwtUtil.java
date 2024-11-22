@@ -5,13 +5,16 @@ import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
+    //    private final String secret = "mysecretkey";
+    private final Key secret = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long expirationMs = 3600000; // 1 hour
 
     public String generateToken(String username, String role) {
