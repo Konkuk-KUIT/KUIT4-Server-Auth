@@ -12,12 +12,21 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
         // TODO : 로그인 한 사용자면 username 이용해 "Hello, {username}" 반환하기
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        String username = (String) request.getAttribute("username");
+        if (username != null) {
+            return ResponseEntity.ok("Hello, " + username);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized"); // Interceptor를 먼저 들어가서 일로 넘어갈 일이 잘 없음
     }
 
     @GetMapping("/admin")
     public ResponseEntity<String> getAdmin(HttpServletRequest request) {
         // TODO: role이 admin이면 "Hello, admin" 반환하기
+        String role = (String) request.getAttribute("role");
+        if ("ROLE_ADMIN".equals(role)) {
+            return ResponseEntity.ok("Hello, admin");
+        }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
     }
 }

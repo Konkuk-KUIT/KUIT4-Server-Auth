@@ -5,14 +5,21 @@ import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import lombok.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String secret = "mysecretkey";
+    private final String secret = "yourverylongandsecuresecretkeyforjwtsigning";
     private final long expirationMs = 3600000; // 1 hour
+
+//    @PostConstruct
+//    public void init() {
+//        System.out.println("JWT Secret: " + secret);
+//    }
 
     public String generateToken(String username, String role) {
         return Jwts.builder()
