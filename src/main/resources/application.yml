@@ -3,16 +3,16 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:mission_db;DB_CLOSE_DELAY=-1;MODE=MYSQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:mysql://localhost:3307/mission_db?characterEncoding=UTF-8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+  sql:
+    init:
+      mode: always
+      platform: mysql
 
 jwt:
-  secret: mysecretkey
+  secret: mysecretkeymysecretkeymysecretkeymysecretkey
   expiration: 3600000
 
