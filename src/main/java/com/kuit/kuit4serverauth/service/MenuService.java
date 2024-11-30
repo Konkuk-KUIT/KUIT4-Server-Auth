@@ -1,7 +1,7 @@
 package com.kuit.kuit4serverauth.service;
 
 import com.kuit.kuit4serverauth.DTO.Response.ApiResponse;
-import com.kuit.kuit4serverauth.DTO.Response.MenuSearchResponse;
+import com.kuit.kuit4serverauth.DTO.Response.Menu.MenuSearchResponse;
 
 import com.kuit.kuit4serverauth.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.kuit.kuit4serverauth.repository;
 
-import com.kuit.kuit4serverauth.DTO.Response.StoreResponse;
+import com.kuit.kuit4serverauth.DTO.Response.Store.StoreResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

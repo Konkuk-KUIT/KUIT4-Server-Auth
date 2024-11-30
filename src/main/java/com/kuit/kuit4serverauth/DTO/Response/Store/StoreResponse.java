@@ -1,4 +1,4 @@
-package com.kuit.kuit4serverauth.DTO.Response;
+package com.kuit.kuit4serverauth.DTO.Response.Store;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class StoreResponse {
-    private Long storeId;
+    private Long store_id;
     private String name;
-    private Integer minimumDeliveryPrice;
+    private Integer minimum_delivery_price;
     private String status;
 }

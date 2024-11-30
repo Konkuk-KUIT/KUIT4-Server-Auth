@@ -1,7 +1,7 @@
 package com.kuit.kuit4serverauth.service;
 
 import com.kuit.kuit4serverauth.DTO.Response.ApiResponse;
-import com.kuit.kuit4serverauth.DTO.Response.StoreResponse;
+import com.kuit.kuit4serverauth.DTO.Response.Store.StoreResponse;
 import com.kuit.kuit4serverauth.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
