@@ -47,18 +47,7 @@ public class AuthController {
         String refreshToken = credentials.get("refreshToken");
 
         try {
-            // RefreshToken 유효성 검사 및 AccessToken 재발급
-            Claims claims = jwtUtil.validateToken(refreshToken);
-            String username = claims.getSubject();
-            String role = claims.get("role", String.class);
-
-            if (role != null && role.equals("ROLE_ADMIN")) {
-                role = "admin";
-            } else {
-                role = "user";
-            }
-
-            String newAccessToken = jwtUtil.generateToken(username, role);  // Role은 실제 사용자 role에 맞게 설정
+            String newAccessToken = jwtUtil.refreshAccessToken(refreshToken);  // Role은 실제 사용자 role에 맞게 설정
 
             Map<String, String> response = new HashMap<>();
             response.put("accessToken", newAccessToken);

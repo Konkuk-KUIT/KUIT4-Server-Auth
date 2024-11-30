@@ -4,6 +4,7 @@ import com.kuit.kuit4serverauth.model.User;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 @Repository
 public class UserRepository {
@@ -15,6 +16,11 @@ public class UserRepository {
 
     public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
+        try {
+            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), username);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // 결과가 없을 경우 null 반환
+        }
     }
+
 }
