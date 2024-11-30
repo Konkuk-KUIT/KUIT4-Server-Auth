@@ -1,4 +1,4 @@
-package com.kuit.kuit4serverauth.DTO;
+package com.kuit.kuit4serverauth.DTO.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

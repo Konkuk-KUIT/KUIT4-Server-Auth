@@ -1,12 +1,11 @@
 package com.kuit.kuit4serverauth.controller;
 
-import com.kuit.kuit4serverauth.DTO.LoginRequest;
+import com.kuit.kuit4serverauth.DTO.Request.LoginRequest;
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
 import com.kuit.kuit4serverauth.model.User;
 import com.kuit.kuit4serverauth.repository.UserRepository;
 import com.kuit.kuit4serverauth.service.JwtUtil;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
