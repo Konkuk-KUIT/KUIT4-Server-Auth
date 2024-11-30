@@ -32,7 +32,7 @@ public class UserController {
         return orderService.getFrequentStores(userId);
     }
 
-    @GetMapping("/{userId}/criteria")
+    @GetMapping("/{userId}/order-history")
     public ResponseEntity<?> getUserOrderHistory(@PathVariable Long userId) {
         return orderService.getUserOrderHistory(userId);
     }
