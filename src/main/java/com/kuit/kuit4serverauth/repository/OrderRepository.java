@@ -1,12 +1,18 @@
 package com.kuit.kuit4serverauth.repository;
 
+import com.kuit.kuit4serverauth.DTO.Response.Menu.MenuOptionResponse;
+import com.kuit.kuit4serverauth.DTO.Response.Menu.MenuResponse;
 import com.kuit.kuit4serverauth.DTO.Response.OrderResponse;
 import com.kuit.kuit4serverauth.DTO.Response.Store.FrequentStoreResponse;
 import com.kuit.kuit4serverauth.DTO.Response.Store.PopularCategortStoreResponse;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -38,18 +44,45 @@ public class OrderRepository {
         String sql = "SELECT \n" +
                 "    order.order_id,\n" +
                 "    order.payment,\n" +
-                "    order.price AS total_price,\n" +
+                "    (order.price + IFNULL(menu_option.price, 0)) AS total_price,\n" +
                 "    menu.menu_id,\n" +
                 "    menu.name AS menu_name,\n" +
                 "    menu_option.menu_option_id,\n" +
                 "    menu_option.essential_option,\n" +
                 "    menu_option.select_option,\n" +
-                "    menu_option.price\n" +
+                "    menu_option.price AS option_price\n" +
                 "FROM Order order\n" +
                 "JOIN Menu menu ON menu.menu_id = order.menu_id\n" +
                 "LEFT JOIN menu_option menu_option ON menu_option.menu_option_id = order.menu_option_id\n" +
                 "WHERE order.user_id = ?\n" +
-                "ORDER BY order.order_id, menu.menu_id, menu_option.menu_option_id;\n";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(OrderResponse.class), userId);
+                "ORDER BY total_price ASC;\n";
+
+        // 커스텀 RowMapper로 변환
+        return jdbcTemplate.query(sql, new Object[]{userId}, new RowMapper<OrderResponse>() {
+            @Override
+            public OrderResponse mapRow(ResultSet rs, int rowNum) throws SQLException {
+                OrderResponse orderResponse = new OrderResponse();
+                orderResponse.setOrder_id(rs.getLong("order_id"));
+                orderResponse.setPayment(rs.getString("payment"));
+                orderResponse.setTotal_price(rs.getInt("total_price"));
+
+                // 메뉴 정보를 생성
+                MenuResponse menuResponse = new MenuResponse();
+                menuResponse.setMenu_id(rs.getLong("menu_id"));
+                menuResponse.setMenu_name(rs.getString("menu_name"));
+
+                // 메뉴 옵션 추가
+                MenuOptionResponse menuOptionResponse = new MenuOptionResponse();
+                menuOptionResponse.setMenu_option_id(rs.getLong("menu_option_id"));
+                menuOptionResponse.setEssential_option(rs.getString("essential_option"));
+                menuOptionResponse.setSelect_option(rs.getString("select_option"));
+                menuOptionResponse.setPrice(rs.getInt("option_price"));
+
+                menuResponse.setMenu_option(Arrays.asList(menuOptionResponse));
+                orderResponse.setMenu_list(Arrays.asList(menuResponse));
+
+                return orderResponse;
+            }
+        });
     }
 }
