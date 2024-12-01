@@ -25,6 +25,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
+    //todo 아직 토큰이 만료되기전에 login하면 기존에 RefreshTokenRepository에 존재하던 열을 업데이트
+    // -> username을 unique하게 지킬 것..
     public TokenResponse login(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();

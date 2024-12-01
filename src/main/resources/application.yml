@@ -3,14 +3,15 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:mission_db;DB_CLOSE_DELAY=-1;MODE=MYSQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:mysql://localhost:3306/kuit4serverauth
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: janghyunjun
+    password: Wonjoon1206!
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+
 
 jwt:
   secret: mysecretkey123mysecretkey123mysecretkey123mysecretkey123mysecretkey123mysecretkey123

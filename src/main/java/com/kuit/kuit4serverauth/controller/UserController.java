@@ -16,7 +16,7 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(UserInfoRequest userDto) {
         log.info("사용자 {} 프로필 요청", userDto.getUsername());
-//        if(request.getAttribute("username") == null) { //여기 예외처리 어떻게??
+//        if(userDto.getUsername() == null) { //여기 예외처리 어떻게??
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
 //        }
         return ResponseEntity.ok("Hello, " + userDto.getUsername());
