@@ -1,4 +1,4 @@
-package com.kuit.kuit4serverauth.service;
+package com.kuit.kuit4serverauth.util;
 
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;

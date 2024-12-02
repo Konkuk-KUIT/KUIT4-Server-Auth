@@ -1,4 +1,4 @@
-package com.kuit.kuit4serverauth.service;
+package com.kuit.kuit4serverauth.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

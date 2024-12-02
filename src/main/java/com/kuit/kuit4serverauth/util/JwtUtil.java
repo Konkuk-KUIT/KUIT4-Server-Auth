@@ -1,12 +1,10 @@
-package com.kuit.kuit4serverauth.service;
+package com.kuit.kuit4serverauth.util;
 
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
