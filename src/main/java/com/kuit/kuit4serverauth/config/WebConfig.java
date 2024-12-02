@@ -1,7 +1,7 @@
 package com.kuit.kuit4serverauth.config;
 
 import com.kuit.kuit4serverauth.interceptor.AuthInterceptor;
-import com.kuit.kuit4serverauth.service.CustomArgumentsResolver;
+import com.kuit.kuit4serverauth.util.CustomArgumentsResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

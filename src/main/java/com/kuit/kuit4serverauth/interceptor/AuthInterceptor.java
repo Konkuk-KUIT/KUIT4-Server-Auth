@@ -2,7 +2,7 @@ package com.kuit.kuit4serverauth.interceptor;
 
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
-import com.kuit.kuit4serverauth.service.JwtUtil;
+import com.kuit.kuit4serverauth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
