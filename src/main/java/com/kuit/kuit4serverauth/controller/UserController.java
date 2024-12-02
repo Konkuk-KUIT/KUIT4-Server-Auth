@@ -1,11 +1,17 @@
 package com.kuit.kuit4serverauth.controller;
 
+import com.kuit.kuit4serverauth.dto.TotalOrderInfo;
+import com.kuit.kuit4serverauth.dto.TotalOrderInfoListAndPrice;
 import com.kuit.kuit4serverauth.model.User;
-import com.kuit.kuit4serverauth.service.AccessUser;
+import com.kuit.kuit4serverauth.service.UserService;
+import com.kuit.kuit4serverauth.util.AccessUser;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.kuit.kuit4serverauth.enums.Role.ROLE_USER;
@@ -13,7 +19,20 @@ import static com.kuit.kuit4serverauth.exception.ErrorCode.FORBIDDEN_ACCESS;
 import static com.kuit.kuit4serverauth.exception.ErrorCode.INVALID_TOKEN;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService){
+        this.userService = userService;
+    }
+
+    @GetMapping("/{userId}/ordered-info")
+    public TotalOrderInfoListAndPrice getTotalUserOrderedInfo(@PathVariable("userId") long userId){
+        return userService.getTotalUserOrderedInfo(userId);
+    }
 
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(HttpServletRequest request) {
