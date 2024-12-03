@@ -1,13 +1,11 @@
 package com.kuit.kuit4serverauth.dto;
 
-import com.kuit.kuit4serverauth.model.Menu;
-import com.kuit.kuit4serverauth.model.Store;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MenuAndStore {
-    private String menuName;
+public class PopularStore {
     private String storename;
+    private int ordercount;
 }

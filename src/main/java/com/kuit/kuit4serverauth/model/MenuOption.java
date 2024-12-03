@@ -10,11 +10,7 @@ import java.sql.Timestamp;
 @Setter
 @Builder
 public class MenuOption {
-    private Long menuOptionId;
+    private Long menuOptionID;
     private String option;
-    private String content;
     private int price;
-    private Timestamp created_at;
-    private Timestamp updated_at;
-    private String status;
 }

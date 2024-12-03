@@ -10,11 +10,6 @@ import java.sql.Timestamp;
 @Setter
 @Builder
 public class Order {
-    private Long orderId;
+    private Long orderID;
     private int total_price;
-    private String payMethod;
-    private String requirement;
-    private Timestamp created_at;
-    private Timestamp updated_at;
-    private String status;
 }

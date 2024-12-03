@@ -21,14 +21,8 @@ public class MenuRepository {
                 "FROM store s JOIN menu m on s.storeID = m.storeID\n" +
                 "where m.menuName like ?";
         return jdbcTemplate.query(query, new Object[]{"%" + name + "%"}, (rs, rowNum) -> new MenuAndStore(
-                Menu.builder()
-                        .menuId(rs.getLong("menuId"))
-                        .menuName(rs.getString("menuName"))
-                        .build(),
-                Store.builder()
-                        .storeId(rs.getLong("storeId"))
-                        .storeName(rs.getString("storeName"))
-                        .build()
+                rs.getString("menuName"),
+                rs.getString("storename")
         ));
     }
 }

@@ -14,11 +14,4 @@ public class User {
     private String role;
     private String username;
     private String password;
-    private String email;
-    private String phone;
-    private String nickname;
-    private String grade;
-    private String status;
-    private Timestamp created_at;
-    private Timestamp updated_at;
 }

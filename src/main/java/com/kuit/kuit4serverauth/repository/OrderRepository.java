@@ -18,25 +18,21 @@ public class OrderRepository {
     }
 
     public List<OrderDetail> findOrderByUserId(Long userId) {
-        String query = "select *" +
-                "from Order o " +
+        String query = "select o.orderID, o.total_price, m.menuID, m.menuName, mo.menuOptionID, mo.option\n" +
+                "from `Order` o " +
                 "join menu m on o.menuID = m.menuID " +
                 "join MenuOption mo on m.menuID = mo.menuID\n" +
                 "where o.userID = ?";
         return jdbcTemplate.query(query, new Object[]{userId},(rs, rowNum) -> new OrderDetail(
-                Order.builder()
-                        .orderId(rs.getLong("orderID"))
-                        .total_price(rs.getInt("total_price"))
-                        .build(),
-                Menu.builder()
-                        .menuId(rs.getLong("menuID"))
-                        .menuName(rs.getString("menuName"))
-                        .build(),
-                MenuOption.builder()
-                        .menuOptionId(rs.getLong("menuOptionID"))
-                        .option(rs.getString("option"))
-                        .build()
+                rs.getLong("orderID"),
+                rs.getInt("total_price"),
+                rs.getLong("menuID"),
+                rs.getString("menuName"),
+                rs.getLong("menuOptionID"),
+                rs.getString("option")
 
         ));
     }
+
+
 }

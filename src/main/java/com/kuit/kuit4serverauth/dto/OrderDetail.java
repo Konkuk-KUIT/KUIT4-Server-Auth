@@ -9,7 +9,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class OrderDetail {
-    private Order order;
-    private Menu menu;
-    private MenuOption menuOption;
+    private Long orderID;
+    private int total_price;
+    private Long menuID;
+    private String menuName;
+    private Long menuOptionID;
+    private String option;
 }

@@ -1,5 +1,6 @@
 package com.kuit.kuit4serverauth.controller;
 
+import com.kuit.kuit4serverauth.dto.FrequentlyOrderedStore;
 import com.kuit.kuit4serverauth.interceptor.AuthInterceptor;
 import com.kuit.kuit4serverauth.repository.StoreRepository;
 import com.kuit.kuit4serverauth.service.JwtUtil;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -34,5 +37,10 @@ public class UserController {
         }
         return ResponseEntity.status(FORBIDDEN).body("Forbidden");
     }
-
+    
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<FrequentlyOrderedStore>> getFrequentStores(@PathVariable Long userId) {
+        List<FrequentlyOrderedStore> storeNameByUserId = storeRepository.findStoreNameByUserId(userId);
+        return ResponseEntity.ok(storeNameByUserId);
+    }
 }
