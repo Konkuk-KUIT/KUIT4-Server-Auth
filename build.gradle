@@ -45,6 +45,9 @@ dependencies {
     // Spring Boot DevTools (Optional)
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -7,6 +7,12 @@ import com.kuit.kuit4serverauth.model.User;
 import com.kuit.kuit4serverauth.repository.UserRepository;
 import com.kuit.kuit4serverauth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Auth APIs", description = "인증 및 인가 관련 API")
 public class AuthController {
+
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -26,6 +34,23 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(
+            summary = "로그인 요청 - 1",
+            description = "username과 password를 받아 검증 후 access, refresh 토큰을 발급합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 액세스 및 리프레시 토큰을 발급합니다.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Map.class),
+                                    examples = @ExampleObject(value = "{\n" +
+                                            "  \"access-token\": \"newAccessToken123\",\n" +
+                                            "  \"refresh-token\": \"newRefreshToken456\"\n}")
+                            )
+                    )
+            }
+    )
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credentials) {
         String username = credentials.get("username");
         String password = credentials.get("password");
@@ -40,6 +65,23 @@ public class AuthController {
     }
 
     @PostMapping("/login2")
+    @Operation(
+            summary = "로그인 요청 - 2",
+            description = "username과 password를 받아 검증 후 access, refresh 토큰을 발급합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 액세스 및 리프레시 토큰을 발급합니다.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Map.class),
+                                    examples = @ExampleObject(value = "{\n" +
+                                            "  \"access-token\": \"newAccessToken123\",\n" +
+                                            "  \"refresh-token\": \"newRefreshToken456\"\n}")
+                            )
+                    )
+            }
+    )
     public ResponseEntity<Map<String, String>> login2(@RequestBody LoginRequestDto loginRequestDto) {
         String username = loginRequestDto.getUsername();
         String password = loginRequestDto.getPassword();
@@ -54,6 +96,23 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
+    @Operation(
+            summary = "엑세스 토큰 재요청",
+            description = "refresh-token을 받아 access, refresh 토큰을 발급합니다.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 액세스 및 리프레시 토큰을 발급합니다.",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = Map.class),
+                                    examples = @ExampleObject(value = "{\n" +
+                                            "  \"access-token\": \"newAccessToken123\",\n" +
+                                            "  \"refresh-token\": \"newRefreshToken456\"\n}")
+                            )
+                    )
+            }
+    )
     public ResponseEntity<Map<String, String>> refreshToken(@RequestBody Map<String, String> tokenRequest) {
         String refreshToken = tokenRequest.get("refresh-token");
         Claims claims = jwtUtil.validateToken(refreshToken);

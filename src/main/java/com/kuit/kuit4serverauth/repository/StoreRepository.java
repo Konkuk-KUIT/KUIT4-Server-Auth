@@ -68,7 +68,7 @@ public class StoreRepository {
     }
 
     public List<Store> findUserMultipleOrdered(long userId) {
-        String sql = "SELECT s.* " +
+        String sql = "SELECT DISTINCT s.* " +
                 "FROM stores s " +
                 "JOIN orders o ON s.store_id = o.store_id " +
                 "WHERE o.user_id = ? " +
@@ -92,4 +92,29 @@ public class StoreRepository {
         }, userId);
     }
 
+    public List<Store> findUserMultipleOrderedPaging(long userId, long lastStoreId, int pageNum) {
+        String sql = "SELECT DISTINCT s.* " +
+                "FROM stores s " +
+                "JOIN orders o ON s.store_id = o.store_id " +
+                "WHERE o.user_id = ? AND o.store_id > ? " +
+                "GROUP BY s.store_id " +
+                "HAVING COUNT(o.order_id) >= 2 "+
+                "LIMIT ?";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            return Store.builder()
+                    .storeId(rs.getLong("s.store_id"))
+                    .name(rs.getString("s.name"))
+                    .category(rs.getString("s.category"))
+                    .minOrder(rs.getLong("s.min_order"))
+                    .telephone(rs.getString("s.telephone"))
+                    .address(rs.getString("s.address"))
+                    .latitude(rs.getDouble("s.latitude"))
+                    .longitude(rs.getDouble("s.longitude"))
+                    .createdAt(rs.getTimestamp("s.created_at").toLocalDateTime())
+                    .updatedAt(rs.getTimestamp("s.updated_at").toLocalDateTime())
+                    .status(rs.getString("s.status"))
+                    .build();
+        }, userId, lastStoreId, pageNum);
+    }
 }

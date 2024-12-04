@@ -1,10 +1,17 @@
 package com.kuit.kuit4serverauth.controller;
 
+import com.kuit.kuit4serverauth.dto.MenuAndStore;
 import com.kuit.kuit4serverauth.dto.TotalOrderInfo;
 import com.kuit.kuit4serverauth.dto.TotalOrderInfoListAndPrice;
 import com.kuit.kuit4serverauth.model.User;
 import com.kuit.kuit4serverauth.service.UserService;
 import com.kuit.kuit4serverauth.util.AccessUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +27,7 @@ import static com.kuit.kuit4serverauth.exception.ErrorCode.INVALID_TOKEN;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User APIs", description = "유저 관련 API")
 public class UserController {
 
     private final UserService userService;
@@ -30,6 +38,18 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/ordered-info")
+    @Operation(
+            summary = "회원 주문 내역 조회",
+            description = "- 특정 회원의 주문 내역을 조회하며, 가격 순으로 정렬합니다.\n" +
+                    "- 메뉴와 옵션 정보를 포함하고 총 가격(`totalPrice`)을 계산하여 반환합니다.",
+
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "성공적으로 메뉴와 음식점 정보를 반환합니다."
+                    )
+            }
+    )
     public TotalOrderInfoListAndPrice getTotalUserOrderedInfo(@PathVariable("userId") long userId){
         return userService.getTotalUserOrderedInfo(userId);
     }

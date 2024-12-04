@@ -28,4 +28,8 @@ public class StoreService {
     public List<Store> findStoresUserMultipleOrdered(long userId){
         return storeRepository.findUserMultipleOrdered(userId);
     }
+
+    public List<Store> findStoresUserMultipleOrderedPaging(long userId, long lastStoreId, int pageNum){
+        return storeRepository.findUserMultipleOrderedPaging(userId, lastStoreId, pageNum);
+    }
 }
