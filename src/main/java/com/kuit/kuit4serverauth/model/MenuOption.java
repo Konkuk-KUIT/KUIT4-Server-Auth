@@ -9,9 +9,8 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Builder
-public class User {
-    private Long id;
-    private String role;
-    private String username;
-    private String password;
+public class MenuOption {
+    private Long menuOptionID;
+    private String option;
+    private int price;
 }
