@@ -1,18 +1,19 @@
 package com.kuit.kuit4serverauth.controller;
 
+import com.kuit.kuit4serverauth.dto.LoginReq;
+import com.kuit.kuit4serverauth.dto.LoginRes;
+import com.kuit.kuit4serverauth.dto.RefreshTokenReq;
+import com.kuit.kuit4serverauth.dto.RefreshTokenRes;
 import com.kuit.kuit4serverauth.exception.CustomException;
 import com.kuit.kuit4serverauth.exception.ErrorCode;
 import com.kuit.kuit4serverauth.model.User;
 import com.kuit.kuit4serverauth.repository.UserRepository;
 import com.kuit.kuit4serverauth.service.JwtUtil;
-import org.springframework.http.HttpStatus;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 public class AuthController {
@@ -25,18 +26,35 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
+    public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {      //dto 로 감싸는 형식으로 리펙토링
+        String username = loginReq.getUsername();
+        String password = loginReq.getPassword();
 
         User user = userRepository.findByUsername(username);
         if (user == null || !user.getPassword().equals(password)) {
             throw new CustomException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
 
-        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
+        String accessToken = jwtUtil.generateToken(user.getUsername(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
+        //캐시에 refreshToken 저장, 저장구조에 들어갔다 오는게 성능에 영향이 큼 > refreshToken 자체는 접근을 많이 안해서 성능에 그나마 도움
+        //쿠키에 넣으면 안되는 이유 확실하게
+
+        LoginRes loginRes = new LoginRes(accessToken, refreshToken);
+
+        return ResponseEntity.ok(loginRes);         //JSON으로 응답, ResponseEntity : HTTP 응답의 상태 코드, 헤더, 바디를 포함한 응답 전체를 정의하는 객체
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<RefreshTokenRes> refreshToken(@RequestBody RefreshTokenReq refreshTokenReq) {
+        String refreshToken = refreshTokenReq.getRefreshToken();
+
+        Claims claims = jwtUtil.validateToken(refreshToken);
+        String username = claims.getSubject();
+
+        String newAccessToken = jwtUtil.generateToken(username, (String)claims.get("role"));
+        RefreshTokenRes response = new RefreshTokenRes(newAccessToken);
+
         return ResponseEntity.ok(response);
     }
 }
