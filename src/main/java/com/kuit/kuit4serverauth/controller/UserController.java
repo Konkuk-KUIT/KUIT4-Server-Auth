@@ -1,19 +1,23 @@
 package com.kuit.kuit4serverauth.controller;
 
+import com.kuit.kuit4serverauth.dto.OrderInfoDTO;
 import com.kuit.kuit4serverauth.dto.UserInfo;
-import com.kuit.kuit4serverauth.repository.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.Setter;
+import com.kuit.kuit4serverauth.model.Store;
+import com.kuit.kuit4serverauth.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
+
+    private final UserService userService;
 
     @GetMapping("/profile")
     public ResponseEntity<String> getProfile(UserInfo userInfo) {
@@ -29,5 +33,18 @@ public class UserController {
             return ResponseEntity.ok("Hello, admin");
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+    }
+
+    @GetMapping("/users/{userId}/orders")
+    public ResponseEntity<List<OrderInfoDTO>> getUsersAllOrders(@PathVariable Long userId) {
+        List<OrderInfoDTO> usersAllOrders = userService.findUsersAllOrders(userId);
+        return ResponseEntity.ok(usersAllOrders);
+    }
+
+    @GetMapping("/users/{userId}/ordered-stores")
+    public ResponseEntity<List<Store>> getStoresWithMultipleOrders(@PathVariable Long userId,
+                                                                   @RequestParam("minOrderCount") int minOrderCount) {
+        List<Store> stores = userService.findStoresWithMultipleOrders(userId, minOrderCount);
+        return ResponseEntity.ok(stores);
     }
 }
